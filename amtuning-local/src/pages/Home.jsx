@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, Shield, Globe, Info, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
-import Hero from '../components/Hero';
-import ProductCard from '../components/ProductCard';
-import NewsletterSection from '../components/NewsletterSection';
+import Hero from '../components/layout/Hero';
+import ProductCard from '../components/products/ProductCard';
+import NewsletterSection from '../components/marketing/NewsletterSection';
 import { useCart } from '../contexts/CartContext';
 import { products } from '../data/productDatabase';
 
 const Home = () => {
     const { addToCart } = useCart();
     
-    // Real featured products derived from master list
-    const featuredProductIds = [101, 102, 109, 105];
-    const featuredProducts = products.filter(p => featuredProductIds.includes(p.id));
+    // Randomize featured products on each page load
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+
+    useEffect(() => {
+        // Shuffle and select 8 random products excluding Ferrari (401, 402)
+        const availableProducts = products.filter(p => p.id !== 401 && p.id !== 402);
+        const shuffled = [...availableProducts].sort(() => Math.random() - 0.5);
+        setFeaturedProducts(shuffled.slice(0, 8));
+    }, []);
 
     // Get Ferrari products for the special section
     const ferrari488 = products.find(p => p.id === 401);

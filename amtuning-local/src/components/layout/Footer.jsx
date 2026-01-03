@@ -1,8 +1,8 @@
 import React from 'react';
 import { Facebook, Instagram, Mail, Phone, MapPin, Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import '../styles/main.css';
-import logo from '../assets/vsspeed-logo-transparent.png';
+import '../../styles/main.css';
+import logo from '../../assets/vsspeed-logo-transparent.png';
 
 const Footer = () => {
     return (

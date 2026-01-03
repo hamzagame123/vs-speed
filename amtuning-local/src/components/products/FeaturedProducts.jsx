@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Zap, ArrowRight } from 'lucide-react';
-import e9xWidebody from '../assets/e9x-widebody.jpg';
-import lpfpE9x from '../assets/lpfp-e9x.jpg';
+import e9xWidebody from '../../assets/e9x-widebody.jpg';
+import lpfpE9x from '../../assets/lpfp-e9x.jpg';
 
 const FeaturedProducts = () => {
     const featuredProducts = [

@@ -11,15 +11,22 @@ export const VehicleProvider = ({ children }) => {
         model: ''
     });
 
-    // Generate years 1950-2026
-    const years = Array.from({ length: 2026 - 1950 + 1 }, (_, i) => 2026 - i);
+    // Generate years 1941-2026 (as per AMTuning + user request)
+    const years = Array.from({ length: 2026 - 1941 + 1 }, (_, i) => 2026 - i);
 
-    // Comprehensive list of exotic and standard makes
+    // Comprehensive list from AMTuning.ca - ALL makes supported
     const makes = [
-        "Audi", "BMW", "Mercedes-Benz", "Porsche", "Volkswagen", "Ferrari", "Lamborghini", 
-        "McLaren", "Aston Martin", "Bugatti", "Pagani", "Koenigsegg", "Maserati", "Alfa Romeo",
-        "Rolls-Royce", "Bentley", "Jaguar", "Land Rover", "Lotus", "Toyota", "Honda", "Nissan", 
-        "Mazda", "Subaru", "Lexus", "Acura", "Infiniti", "Ford", "Chevrolet", "Dodge", "Tesla", "Other"
+        "AC", "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", 
+        "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler", "Citroen", "Datsun",
+        "DeLorean", "Dodge", "Edsel", "Ferrari", "Fiat", "Ford", "Genesis", "GMC",
+        "Honda", "Hummer", "Hyundai", "Infiniti", "Isuzu", "Jaguar", "Jeep", "Kia",
+        "Koenigsegg", "Lamborghini", "Land Rover", "Lexus", "Lincoln", "Lotus", 
+        "Maserati", "Maybach", "Mazda", "McLaren", "Mercedes-Benz", "Mercury", "MG",
+        "Mini", "Mitsubishi", "Nissan", "Oldsmobile", "Opel", "Packard", "Pagani",
+        "Peugeot", "Plymouth", "Pontiac", "Porsche", "Ram", "Renault", "Rivian",
+        "Rolls-Royce", "Saab", "Saturn", "Scion", "Seat", "Skoda", "Smart", 
+        "Studebaker", "Subaru", "Suzuki", "Tesla", "Toyota", "Triumph", "Volkswagen",
+        "Volvo", "Other"
     ].sort();
 
     const updateVehicle = (field, value) => {

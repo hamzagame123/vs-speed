@@ -53,7 +53,7 @@ export const products = [
         id: 203,
         title: 'VRS-Style Wide Body Kit Carbon Fiber - Toyota GT86 / Subaru BRZ',
         price: '$3,500 USD',
-        image: 'C:/Users/burri/.gemini/antigravity/brain/e7f93852-3e61-40b1-aa40-4f4c06288da8/uploaded_image_1767388181803.png',
+        image: '../../../.gemini/antigravity/brain/e7f93852-3e61-40b1-aa40-4f4c06288da8/uploaded_image_1767418668772.jpg',
         category: 'Body Kits',
         brand: 'VS SPEED',
         description: 'VRS-Style widebody kit in carbon fiber for Toyota GT86/Subaru BRZ. Complete kit includes front bumper, fender flares, side skirts, rear diffuser, and rear wing. Aggressive styling with premium carbon fiber construction.',

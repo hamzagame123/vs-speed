@@ -1,9 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import EmailPopup from './components/EmailPopup';
-import SalePopup from './components/SalePopup';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import VehicleSelectorBar from './components/vehicle/VehicleSelectorBar';
+import EmailPopup from './components/marketing/EmailPopup';
+import SalePopup from './components/marketing/SalePopup';
+import FloatingAd from './components/marketing/FloatingAd';
 import Home from './pages/Home';
 import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
@@ -17,11 +19,14 @@ import NewPost from './pages/NewPost';
 import AIAssistant from './pages/AIAssistant';
 import PartHunter from './pages/PartHunter';
 import PaymentSettings from './pages/PaymentSettings';
-import Login from './pages/Login'; // New Login Component
+import Login from './pages/Login'; 
+import AdminDashboard from './pages/AdminDashboard'; 
+import AdminLogin from './pages/AdminLogin'; 
+import UserProfile from './pages/UserProfile'; 
 
 // Auth & Security
 import { AuthProvider } from './contexts/AuthContext';
-import SecurityGateway from './components/SecurityGateway';
+import SecurityGateway from './components/ui/SecurityGateway';
 
 // Placeholder components
 const Contact = () => <TextPage title="Contact Us" content="Support: vsspeedsupport@gmail.com | General Inquiries: vsspeedhq@gmail.com | Mississauga, ON, Canada" />;
@@ -37,7 +42,9 @@ function App() {
         <div className="app" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', background: 'var(--color-bg-deep)' }}>
           <EmailPopup />
           <SalePopup />
+          <FloatingAd />
           <Header />
+          <VehicleSelectorBar />
           <div style={{ flex: '1', width: '100%' }}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -47,6 +54,9 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/account" element={<Login />} />
               <Route path="/account/payments" element={<PaymentSettings />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/profile/:username" element={<UserProfile />} />
               <Route path="/garage" element={<Garage />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/forums" element={<Forums />} />

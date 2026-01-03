@@ -6,10 +6,13 @@ export const authorizedUsers = [
     {
         id: 'admin_001',
         username: 'admin',
-        password: 'password123', // In production, this would be hashed
+        password: 'password123',
         role: 'admin',
         accessLevel: 'CLEARANCE_LEVEL_5',
-        name: 'Commander'
+        name: 'Commander',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin',
+        joinDate: 'Jan 2024',
+        reputation: 9999
     },
     {
         id: 'user_001',
@@ -17,7 +20,10 @@ export const authorizedUsers = [
         password: 'speed',
         role: 'user',
         accessLevel: 'CLEARANCE_LEVEL_1',
-        name: 'Test Driver'
+        name: 'Test Driver',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Driver',
+        joinDate: 'Feb 2024',
+        reputation: 450
     }
 ];
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Truck, CreditCard, MapPin, Shield, Zap } from 'lucide-react';
-import Background3D from './Background3D';
+import Background3D from '../ui/Background3D';
 
 const Hero = () => {
     return (
@@ -48,7 +48,7 @@ const Hero = () => {
 
                         <div className="flex justify-center gap-6 flex-wrap">
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/products" className="gpu-layer" style={{
+                                <Link to="/products" className="gpu-layer cool-outline" style={{
                                     padding: '1.2rem 3rem',
                                     background: 'var(--gradient-red)',
                                     color: 'white',

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Search, ShoppingBag, User, Menu, X, Zap, Globe } from 'lucide-react';
-import logo from '../assets/vsspeed-logo-transparent.png';
+import logo from '../../assets/vsspeed-logo-transparent.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCart } from '../contexts/CartContext';
+import { useCart } from '../../contexts/CartContext';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
