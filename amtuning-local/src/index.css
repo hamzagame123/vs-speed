@@ -70,6 +70,61 @@ h1, h2, h3, h4, h5, h6, .thrasher-text {
   text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); /* Distinct Glow */
 }
 
+/* 4X BIGGER HEADERS */
+h1 {
+  font-size: 6rem !important; /* 4x of ~1.5rem */
+}
+
+h2 {
+  font-size: 4.8rem !important; /* 4x of ~1.2rem */
+}
+
+h3 {
+  font-size: 3.6rem !important; /* 4x of ~0.9rem */
+}
+
+h4 {
+  font-size: 2.8rem !important;
+}
+
+h5 {
+  font-size: 2.4rem !important;
+}
+
+h6 {
+  font-size: 2rem !important;
+}
+
+/* SHOP ITEM NAMES - Neon Green with Pink Inner + Grey Outer Outline */
+.product-title,
+.product-card h3,
+.glass-card h3,
+[class*="ProductCard"] h3 {
+  color: #39ff14 !important; /* Neon Green Fill */
+  font-family: 'Metal Mania', cursive;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  -webkit-text-stroke: 0; /* Reset stroke */
+  text-shadow: 
+    /* Thin Pink Inner Outline */
+    -1px -1px 0 #ff00ff,
+    1px -1px 0 #ff00ff,
+    -1px 1px 0 #ff00ff,
+    1px 1px 0 #ff00ff,
+    /* Fat Grey Outer Outline */
+    -3px -3px 0 #555555,
+    3px -3px 0 #555555,
+    -3px 3px 0 #555555,
+    3px 3px 0 #555555,
+    -3px 0 0 #555555,
+    3px 0 0 #555555,
+    0 -3px 0 #555555,
+    0 3px 0 #555555,
+    /* Glow Effect */
+    0 0 20px rgba(57, 255, 20, 0.5);
+}
+
 /* Override punchline to use standard font for contrast or keep it? 
    User said "leave rest of descriptions... same". Punchline is closer to a header. */
 .punchline {

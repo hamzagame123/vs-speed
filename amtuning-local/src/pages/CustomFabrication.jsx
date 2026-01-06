@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Hammer, Ruler, Zap, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Hammer, Ruler, Zap, ShieldCheck, ChevronRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products } from '../data/productDatabase';
+import yellowCarImage from '../assets/popup_yellow_golf.jpg';
 
 const CustomFabrication = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -155,6 +156,68 @@ const CustomFabrication = () => {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Featured Showcase - Yellow Car */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    style={{
+                        marginBottom: isMobile ? '60px' : '100px',
+                        borderRadius: '32px',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        border: '2px solid rgba(255, 215, 0, 0.3)',
+                        boxShadow: '0 30px 80px rgba(255, 215, 0, 0.15)'
+                    }}
+                >
+                    <img 
+                        src={yellowCarImage}
+                        alt="VS SPEED Custom Build - Yellow Golf"
+                        style={{
+                            width: '100%',
+                            height: isMobile ? '350px' : '500px',
+                            objectFit: 'cover'
+                        }}
+                    />
+                    <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: isMobile ? '30px' : '50px',
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+                            <Star size={18} color="#FFD700" fill="#FFD700" />
+                            <span style={{ 
+                                color: '#FFD700', 
+                                fontWeight: '900', 
+                                fontSize: '11px', 
+                                letterSpacing: '2px',
+                                textTransform: 'uppercase'
+                            }}>
+                                CLIENT SPOTLIGHT
+                            </span>
+                        </div>
+                        <h3 style={{ 
+                            fontSize: isMobile ? '1.8rem' : '2.5rem', 
+                            fontWeight: '900', 
+                            color: 'white', 
+                            marginBottom: '10px',
+                            letterSpacing: '-1px'
+                        }}>
+                            Custom Widebody Build
+                        </h3>
+                        <p style={{ 
+                            color: '#aaa', 
+                            fontSize: isMobile ? '0.9rem' : '1rem',
+                            maxWidth: '600px'
+                        }}>
+                            Full widebody conversion with custom TIG-welded roll cage and performance exhaust fabrication.
+                        </p>
+                    </div>
+                </motion.div>
 
                 {/* Featured Panels */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '40px' : '80px' }}>
