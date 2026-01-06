@@ -1,94 +1,132 @@
-// VSSPEED GLOBAL - Supplier Product Scraper
-// This module scrapes product data from supplier websites
+// VSSPEED GLOBAL - Multi-Supplier Product Scraper
+// Fetches products from multiple dropshipping sources
 
-import { supplierConfig, calculatePrice, validateSupplierConfig } from './automation-config.js';
+import supplierConfig from './automation-config.js';
 
 /**
- * Scrapes products from a specific supplier
- * @param {string} supplierId - ID of the supplier (ecstuning, turner, etc.)
- * @param {string} searchQuery - Product search query
- * @param {number} maxProducts - Maximum number of products to scrape
- * @returns {Promise<Array>} Array of product objects
+ * Scrape products from all enabled suppliers
+ * @param {number} limit - Max products per supplier
+ * @returns {Promise<Array>} Combined product list
  */
-export const scrapeSupplierProducts = async (supplierId, searchQuery = '', maxProducts = 50) => {
-    try {
-        const supplier = validateSupplierConfig(supplierId);
-        console.log(`🔍 Scraping products from ${supplier.name}...`);
+export const scrapeAllSuppliers = async (limit = 25) => {
+    console.log('\n🌐 VSSPEED Multi-Supplier Scraper Started');
+    console.log(`   Scraping ${limit} products per supplier...\n`);
 
-        // In production, this would use a headless browser or API
-        // For now, returning mock data structure
-        const products = await mockScrapeProducts(supplier, searchQuery, maxProducts);
-        
-        console.log(`✅ Scraped ${products.length} products from ${supplier.name}`);
-        return products;
-    } catch (error) {
-        console.error(`❌ Error scraping ${supplierId}:`, error.message);
-        return [];
+    const allProducts = [];
+    const enabledSuppliers = Object.values(supplierConfig.suppliers)
+        .filter(s => s.enabled);
+
+    for (const supplier of enabledSuppliers) {
+        try {
+            console.log(`📦 Scraping ${supplier.name}...`);
+            const products = await scrapeSupplier(supplier, limit);
+            allProducts.push(...products);
+            console.log(`   ✅ Found ${products.length} products from ${supplier.name}`);
+        } catch (error) {
+            console.log(`   ❌ Error scraping ${supplier.name}: ${error.message}`);
+        }
+    }
+
+    console.log(`\n✅ Total products scraped: ${allProducts.length}`);
+    return allProducts;
+};
+
+/**
+ * Scrape products from a single supplier
+ */
+const scrapeSupplier = async (supplier, limit) => {
+    switch (supplier.apiType) {
+        case 'affiliate':
+            return await scrapeAffiliateSupplier(supplier, limit);
+        case 'scrape':
+            return await scrapeWebSupplier(supplier, limit);
+        case 'pa-api':
+            return await scrapeAmazonAPI(supplier, limit);
+        case 'b2b':
+            return await scrapeB2BSupplier(supplier, limit);
+        default:
+            return [];
     }
 };
 
 /**
- * Mock scraper - Replace with real implementation using Puppeteer/Playwright
+ * Scrape affiliate suppliers (AliExpress, DHgate)
  */
-const mockScrapeProducts = async (supplier, searchQuery, maxProducts) => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Mock product data based on supplier
-    const mockProducts = generateMockProducts(supplier, maxProducts);
+const scrapeAffiliateSupplier = async (supplier, limit) => {
+    // In production, use puppeteer or affiliate API
+    console.log(`   🔗 Using affiliate scraping for ${supplier.name}`);
     
-    return mockProducts.map(product => ({
-        ...product,
-        supplier: supplier.name,
-        supplierId: supplier.baseUrl,
-        scrapedAt: new Date().toISOString()
-    }));
+    // Mock data - replace with actual scraping
+    return generateMockProducts(supplier, limit);
+};
+
+/**
+ * Scrape web-based suppliers (ECS, Turner, FCP)
+ */
+const scrapeWebSupplier = async (supplier, limit) => {
+    console.log(`   🌐 Web scraping ${supplier.baseUrl}`);
+    
+    // In production, use puppeteer/playwright
+    // Example: await page.goto(`${supplier.baseUrl}${supplier.searchPath}?q=bmw+parts`)
+    
+    return generateMockProducts(supplier, limit);
+};
+
+/**
+ * Use Amazon Product Advertising API
+ */
+const scrapeAmazonAPI = async (supplier, limit) => {
+    console.log(`   📡 Calling Amazon PA-API...`);
+    
+    // In production, use AWS SDK with PA-API credentials
+    // https://webservices.amazon.com/paapi5/documentation/
+    
+    return generateMockProducts(supplier, limit);
+};
+
+/**
+ * Scrape B2B suppliers (Alibaba)
+ */
+const scrapeB2BSupplier = async (supplier, limit) => {
+    console.log(`   🏭 B2B scraping ${supplier.name}`);
+    
+    return generateMockProducts(supplier, limit);
 };
 
 /**
  * Generate mock products for testing
  */
-const generateMockProducts = (supplier, count) => {
-    const productTemplates = [
-        { name: 'High Flow Turbo Upgrade Kit', basePrice: 1299, category: 'Performance Tuning' },
-        { name: 'Front Mount Intercooler', basePrice: 899, category: 'Performance Tuning' },
-        { name: 'Performance Exhaust System', basePrice: 1499, category: 'Performance Tuning' },
-        { name: 'Cold Air Intake System', basePrice: 399, category: 'Performance Tuning' },
-        { name: 'High Pressure Fuel Pump', basePrice: 599, category: 'Engine Components' },
-        { name: 'Performance Coilovers', basePrice: 1299, category: 'Suspension' },
-        { name: 'Sway Bar Kit', basePrice: 399, category: 'Suspension' },
-        { name: 'Carbon Fiber Hood', basePrice: 1899, category: 'Exterior' },
-        { name: 'LED Headlight Upgrade', basePrice: 799, category: 'Exterior' },
-        { name: 'Racing Seats (Pair)', basePrice: 1599, category: 'Interior' }
-    ];
-
+const generateMockProducts = (supplier, limit) => {
+    const categories = supplier.categories[0] !== 'All' 
+        ? supplier.categories 
+        : ['Engine Components', 'Suspension', 'Exhaust Systems'];
+    
     const products = [];
-    for (let i = 0; i < Math.min(count, productTemplates.length); i++) {
-        const template = productTemplates[i];
-        const yourPrice = calculatePrice(template.basePrice, template.category);
+    
+    for (let i = 0; i < Math.min(limit, 10); i++) {
+        const category = categories[i % categories.length];
+        const basePrice = Math.floor(Math.random() * 500) + 50;
+        const sellingPrice = Math.ceil(basePrice * (1 + supplier.profitMargin));
         
         products.push({
-            id: `${supplier.name.toLowerCase()}-${i + 1}`,
-            title: `${template.name} - ${supplier.name}`,
-            description: `Premium ${template.name.toLowerCase()} sourced from ${supplier.name}. Professional grade performance upgrade for European and American vehicles.`,
-            supplierPrice: template.basePrice,
-            price: yourPrice,
-            category: template.category,
-            brand: supplier.name,
-            inStock: Math.random() > 0.2, // 80% in stock
-            stockQuantity: Math.floor(Math.random() * 50) + 5,
-            imageUrl: `${supplier.baseUrl}/images/product-${i + 1}.jpg`,
-            features: [
-                'Direct bolt-on fitment',
-                'Professional installation recommended',
-                'Manufacturer warranty included',
-                'Ships within 2-3 business days'
-            ],
-            specifications: {
-                weight: `${Math.floor(Math.random() * 50) + 5} lbs`,
-                dimensions: '24" x 18" x 12"',
-                material: 'Aluminum / Stainless Steel'
-            }
+            id: `${supplier.id}-${Date.now()}-${i}`,
+            supplierId: supplier.id,
+            supplierName: supplier.name,
+            mfgPart: `${supplier.id.toUpperCase()}-${Math.floor(Math.random() * 10000)}`,
+            title: `VS SPEED ${category} Part #${i + 1}`,
+            supplierPrice: basePrice,
+            price: `$${sellingPrice}.00 CAD`,
+            priceValue: sellingPrice,
+            image: `https://via.placeholder.com/400x400?text=${supplier.name}+Product`,
+            category: category,
+            brand: 'VS SPEED',
+            description: `Premium ${category.toLowerCase()} part sourced from ${supplier.name}. High quality with fast shipping.`,
+            fitment: ['BMW F-Series', 'BMW G-Series'],
+            inStock: true,
+            supplierLink: supplier.affiliateLink || supplier.baseUrl,
+            chatEnabled: supplier.chatEnabled,
+            shippingDays: supplier.shippingDays,
+            scrapedAt: new Date().toISOString()
         });
     }
     
@@ -96,58 +134,72 @@ const generateMockProducts = (supplier, count) => {
 };
 
 /**
- * Scrapes all active suppliers
- * @returns {Promise<Array>} Combined array of all products
+ * Scrape specific product by URL
  */
-export const scrapeAllSuppliers = async (maxPerSupplier = 20) => {
-    const allProducts = [];
-    const suppliers = Object.keys(supplierConfig.suppliers).filter(
-        key => supplierConfig.suppliers[key].enabled
-    );
-
-    console.log(`🚀 Starting bulk scrape from ${suppliers.length} suppliers...`);
-
-    for (const supplierId of suppliers) {
-        const products = await scrapeSupplierProducts(supplierId, '', maxPerSupplier);
-        allProducts.push(...products);
-        
-        // Rate limiting delay between suppliers
-        await new Promise(resolve => setTimeout(resolve, 3000));
-    }
-
-    console.log(`✅ Total products scraped: ${allProducts.length}`);
-    return allProducts;
-};
-
-/**
- * Updates product pricing based on current markup rules
- */
-export const updateProductPricing = (products) => {
-    return products.map(product => ({
-        ...product,
-        price: calculatePrice(product.supplierPrice, product.category),
-        lastPriceUpdate: new Date().toISOString()
-    }));
-};
-
-/**
- * Checks inventory status for products
- */
-export const checkInventoryStatus = async (productIds) => {
-    console.log(`📦 Checking inventory for ${productIds.length} products...`);
+export const scrapeProductByUrl = async (url) => {
+    console.log(`🔍 Scraping product from: ${url}`);
     
-    // Mock inventory check
-    return productIds.map(id => ({
-        productId: id,
-        inStock: Math.random() > 0.15, // 85% available
-        quantity: Math.floor(Math.random() * 100),
-        checkedAt: new Date().toISOString()
-    }));
+    // Detect supplier from URL
+    let supplier = null;
+    
+    if (url.includes('aliexpress')) {
+        supplier = supplierConfig.suppliers.aliexpress;
+    } else if (url.includes('alibaba')) {
+        supplier = supplierConfig.suppliers.alibaba;
+    } else if (url.includes('amazon')) {
+        supplier = supplierConfig.suppliers.amazon;
+    } else if (url.includes('ecstuning')) {
+        supplier = supplierConfig.suppliers.ecstuning;
+    } else if (url.includes('dhgate')) {
+        supplier = supplierConfig.suppliers.dhgate;
+    }
+    
+    if (!supplier) {
+        throw new Error('Unsupported supplier URL');
+    }
+    
+    // In production, scrape actual product details
+    // For now, return mock data
+    return {
+        url,
+        supplier: supplier.name,
+        supplierId: supplier.id,
+        title: 'Scraped Product',
+        price: 100,
+        sellingPrice: Math.ceil(100 * (1 + supplier.profitMargin)),
+        description: 'Product scraped from supplier',
+        images: [],
+        inStock: true
+    };
+};
+
+/**
+ * Compare prices across suppliers
+ */
+export const comparePrices = async (productQuery) => {
+    console.log(`💰 Comparing prices for: ${productQuery}`);
+    
+    const results = [];
+    const enabledSuppliers = Object.values(supplierConfig.suppliers)
+        .filter(s => s.enabled);
+    
+    for (const supplier of enabledSuppliers) {
+        // In production, search each supplier
+        results.push({
+            supplier: supplier.name,
+            supplierId: supplier.id,
+            price: Math.floor(Math.random() * 200) + 50,
+            inStock: Math.random() > 0.2,
+            shippingDays: supplier.shippingDays
+        });
+    }
+    
+    // Sort by price
+    return results.sort((a, b) => a.price - b.price);
 };
 
 export default {
-    scrapeSupplierProducts,
     scrapeAllSuppliers,
-    updateProductPricing,
-    checkInventoryStatus
+    scrapeProductByUrl,
+    comparePrices
 };

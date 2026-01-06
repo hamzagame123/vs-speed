@@ -1,173 +1,174 @@
-// VSSPEED GLOBAL - Supplier Automation Configuration
-// This file configures all supplier integrations, pricing rules, and sync settings
+// VSSPEED GLOBAL - Multi-Supplier Configuration
+// Automation system for dropshipping from multiple platforms
 
 export const supplierConfig = {
-    // Supplier endpoints and credentials
-    suppliers: {
-        ecstuning: {
-            name: 'ECS Tuning',
-            baseUrl: 'https://www.ecstuning.com',
-            enabled: true,
-            apiKey: process.env.ECS_API_KEY || '', // Set in .env file
-            scrapeConfig: {
-                productSelector: '.product-item',
-                titleSelector: '.product-name',
-                priceSelector: '.product-price',
-                imageSelector: '.product-image img',
-                descriptionSelector: '.product-description',
-                stockSelector: '.stock-status'
-            }
-        },
-        turner: {
-            name: 'Turner Motorsport',
-            baseUrl: 'https://www.turnermotorsport.com',
-            enabled: true,
-            apiKey: process.env.TURNER_API_KEY || '',
-            scrapeConfig: {
-                productSelector: '.product-card',
-                titleSelector: '.product-title',
-                priceSelector: '.price',
-                imageSelector: '.product-img',
-                descriptionSelector: '.description',
-                stockSelector: '.availability'
-            }
-        },
-        fcpeuro: {
-            name: 'FCP Euro',
-            baseUrl: 'https://www.fcpeuro.com',
-            enabled: true,
-            apiKey: process.env.FCP_API_KEY || '',
-            scrapeConfig: {
-                productSelector: '.product',
-                titleSelector: '.title',
-                priceSelector: '.product-price',
-                imageSelector: '.product-image',
-                descriptionSelector: '.details',
-                stockSelector: '.stock'
-            }
-        },
-        modbargains: {
-            name: 'ModBargains',
-            baseUrl: 'https://www.modbargains.com',
-            enabled: true,
-            apiKey: process.env.MODBARGAINS_API_KEY || '',
-            scrapeConfig: {
-                productSelector: '.item',
-                titleSelector: '.product-name',
-                priceSelector: '.price-box',
-                imageSelector: '.product-image img',
-                descriptionSelector: '.product-desc',
-                stockSelector: '.in-stock'
-            }
-        }
+    // Your business details
+    business: {
+        name: 'VS SPEED GLOBAL',
+        email: 'vsspeedhq@gmail.com',
+        automationEmail: 'exoticpourco@gmail.com',
+        website: 'https://vsspeed.org'
     },
 
-    // Pricing rules - Your profit margins
+    // Default profit margins
     pricing: {
-        defaultMarkup: 0.25, // 25% markup on all products
-        minimumProfit: 10, // Minimum $10 profit per item
-        categoryMarkups: {
-            'Performance Tuning': 0.30, // 30% on high-demand items
-            'Engine Components': 0.28,
-            'Suspension': 0.25,
-            'Exterior': 0.22,
-            'Interior': 0.20,
-            'Custom Fabrication': 0.35 // Higher margin on custom work
+        defaultMarkup: 0.35, // 35% markup
+        freeShippingThreshold: 150,
+        currency: 'CAD'
+    },
+
+    // Supplier configurations
+    suppliers: {
+        aliexpress: {
+            id: 'aliexpress',
+            name: 'AliExpress',
+            enabled: true,
+            apiType: 'affiliate', // Uses affiliate links
+            profitMargin: 0.40, // 40% markup
+            chatEnabled: true,
+            chatWidget: 'aliwangwang',
+            shippingDays: { min: 15, max: 45 },
+            priority: 3, // Lower = higher priority
+            categories: ['Exterior', 'Interior', 'Electronics'],
+            autoOrder: false, // Requires manual order placement
+            affiliateLink: 'https://s.click.aliexpress.com/e/_YOUR_AFFILIATE_ID',
+            searchQuery: 'bmw performance parts'
         },
-        shippingMarkup: 0.15 // Add 15% to supplier shipping cost
+
+        alibaba: {
+            id: 'alibaba',
+            name: 'Alibaba',
+            enabled: true,
+            apiType: 'b2b',
+            profitMargin: 0.45, // 45% markup for wholesale
+            chatEnabled: true,
+            chatWidget: 'trademanager',
+            shippingDays: { min: 20, max: 60 },
+            priority: 4,
+            categories: ['Bulk Orders', 'Custom Parts'],
+            autoOrder: false,
+            minOrderQty: 5,
+            searchQuery: 'automotive performance parts'
+        },
+
+        amazon: {
+            id: 'amazon',
+            name: 'Amazon',
+            enabled: true,
+            apiType: 'pa-api', // Product Advertising API
+            profitMargin: 0.15, // Lower margin due to competition
+            chatEnabled: false,
+            shippingDays: { min: 2, max: 7 },
+            priority: 1, // Highest priority - fast shipping
+            categories: ['All'],
+            autoOrder: true, // Can auto-order via API
+            affiliateTag: 'vsspeed-20',
+            apiEndpoint: 'https://webservices.amazon.com/paapi5/searchitems'
+        },
+
+        ecstuning: {
+            id: 'ecstuning',
+            name: 'ECS Tuning',
+            enabled: true,
+            apiType: 'scrape',
+            profitMargin: 0.25,
+            chatEnabled: false,
+            shippingDays: { min: 3, max: 10 },
+            priority: 2,
+            categories: ['Engine Components', 'Brake Systems', 'Suspension'],
+            autoOrder: false,
+            baseUrl: 'https://www.ecstuning.com',
+            searchPath: '/Search/SiteSearch'
+        },
+
+        turnermotorsport: {
+            id: 'turnermotorsport',
+            name: 'Turner Motorsport',
+            enabled: true,
+            apiType: 'scrape',
+            profitMargin: 0.25,
+            chatEnabled: false,
+            shippingDays: { min: 3, max: 10 },
+            priority: 2,
+            categories: ['Performance Tuning', 'Exhaust Systems'],
+            autoOrder: false,
+            baseUrl: 'https://www.turnermotorsport.com'
+        },
+
+        fcpeuro: {
+            id: 'fcpeuro',
+            name: 'FCP Euro',
+            enabled: true,
+            apiType: 'scrape',
+            profitMargin: 0.20,
+            chatEnabled: false,
+            shippingDays: { min: 2, max: 7 },
+            priority: 1,
+            categories: ['OEM Parts', 'Maintenance'],
+            autoOrder: false,
+            baseUrl: 'https://www.fcpeuro.com',
+            lifetimeWarranty: true
+        },
+
+        dhgate: {
+            id: 'dhgate',
+            name: 'DHgate',
+            enabled: true,
+            apiType: 'affiliate',
+            profitMargin: 0.40,
+            chatEnabled: true,
+            chatWidget: 'dhgate-messenger',
+            shippingDays: { min: 10, max: 30 },
+            priority: 3,
+            categories: ['Exterior', 'Interior', 'Accessories'],
+            autoOrder: false
+        }
     },
 
     // Automation settings
     automation: {
-        syncInterval: 21600000, // 6 hours in milliseconds
-        priceUpdateInterval: 86400000, // Daily price updates
-        inventoryCheckInterval: 3600000, // Hourly inventory check
-        maxConcurrentRequests: 5, // Avoid rate limiting
-        retryAttempts: 3,
-        retryDelay: 5000, // 5 seconds between retries
-        enableAutoSync: true,
-        enableAutoOrdering: true,
-        enableInventoryTracking: true
+        syncInterval: 24, // hours
+        priceCheckInterval: 6, // hours
+        stockCheckInterval: 1, // hours
+        autoUpdatePrices: true,
+        autoRemoveOutOfStock: false,
+        notifyOnPriceChange: true,
+        notifyOnStockChange: true
     },
 
-    // Category mapping - Map supplier categories to your categories
-    categoryMapping: {
-        'turbochargers': 'Performance Tuning',
-        'intercoolers': 'Performance Tuning',
-        'exhaust': 'Performance Tuning',
-        'intakes': 'Performance Tuning',
-        'engine parts': 'Engine Components',
-        'fuel system': 'Engine Components',
-        'ignition': 'Engine Components',
-        'suspension': 'Suspension',
-        'coilovers': 'Suspension',
-        'sway bars': 'Suspension',
-        'body kits': 'Exterior',
-        'spoilers': 'Exterior',
-        'carbon fiber': 'Exterior',
-        'seats': 'Interior',
-        'steering wheels': 'Interior',
-        'shift knobs': 'Interior'
-    },
-
-    // Security & Rate Limiting
-    security: {
-        enableRateLimiting: true,
-        requestsPerMinute: 60,
-        enableProxyRotation: false, // Set to true if you get IP banned
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        respectRobotsTxt: true,
-        maxRetries: 3,
-        timeout: 30000 // 30 seconds
-    },
-
-    // Email notifications
-    notifications: {
-        enableOrderNotifications: true,
-        enableInventoryAlerts: true,
-        enableErrorAlerts: true,
-        adminEmail: 'vsspeedhq@gmail.com',
-        customerEmailTemplate: 'order-confirmation'
+    // Email templates
+    emails: {
+        orderConfirmation: true,
+        shippingNotification: true,
+        deliveryConfirmation: true,
+        reviewRequest: true,
+        adminAlerts: true
     }
 };
 
-// Helper function to calculate price with markup
-export const calculatePrice = (supplierPrice, category = null) => {
-    const basePrice = parseFloat(supplierPrice);
+// Get best supplier for a product category
+export const getBestSupplier = (category) => {
+    const enabled = Object.values(supplierConfig.suppliers)
+        .filter(s => s.enabled)
+        .filter(s => s.categories.includes(category) || s.categories.includes('All'));
     
-    // Get category-specific markup or use default
-    const markupRate = category && supplierConfig.pricing.categoryMarkups[category]
-        ? supplierConfig.pricing.categoryMarkups[category]
-        : supplierConfig.pricing.defaultMarkup;
-    
-    const markedUpPrice = basePrice * (1 + markupRate);
-    const profit = markedUpPrice - basePrice;
-    
-    // Ensure minimum profit
-    if (profit < supplierConfig.pricing.minimumProfit) {
-        return basePrice + supplierConfig.pricing.minimumProfit;
-    }
-    
-    return Math.round(markedUpPrice * 100) / 100; // Round to 2 decimals
+    return enabled.sort((a, b) => a.priority - b.priority)[0] || null;
 };
 
-// Helper function to get active suppliers
-export const getActiveSuppliers = () => {
-    return Object.entries(supplierConfig.suppliers)
-        .filter(([_, config]) => config.enabled)
-        .map(([key, config]) => ({ id: key, ...config }));
-};
-
-// Helper function to validate supplier config
-export const validateSupplierConfig = (supplierId) => {
+// Calculate selling price from supplier price
+export const calculateSellingPrice = (supplierPrice, supplierId) => {
     const supplier = supplierConfig.suppliers[supplierId];
-    if (!supplier) {
-        throw new Error(`Supplier ${supplierId} not found in configuration`);
+    const margin = supplier?.profitMargin || supplierConfig.pricing.defaultMarkup;
+    return Math.ceil(supplierPrice * (1 + margin) * 100) / 100;
+};
+
+// Check if supplier supports chat
+export const getSupplierChatWidget = (supplierId) => {
+    const supplier = supplierConfig.suppliers[supplierId];
+    if (supplier?.chatEnabled) {
+        return supplier.chatWidget;
     }
-    if (!supplier.enabled) {
-        throw new Error(`Supplier ${supplierId} is currently disabled`);
-    }
-    return supplier;
+    return null;
 };
 
 export default supplierConfig;
