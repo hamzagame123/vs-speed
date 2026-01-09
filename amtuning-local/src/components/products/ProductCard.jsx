@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ShoppingBag, Zap, Eye, Heart, CheckCircle } from 'lucide-react';
+import { ShoppingBag, Eye, Heart, CheckCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/useCart';
 import { useToast } from '../../contexts/ToastContext';
@@ -15,29 +15,7 @@ const ProductCard = ({ product }) => {
         const wishlist = JSON.parse(localStorage.getItem('vss_wishlist') || '[]');
         return wishlist.includes(id);
     });
-    const [rotation, setRotation] = useState({ x: 0, y: 0 });
     const cardRef = useRef(null);
-
-
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = ((y - centerY) / centerY) * -15; // -15 to 15 degrees
-        const rotateY = ((x - centerX) / centerX) * 15; // -15 to 15 degrees
-        
-        setRotation({ x: rotateX, y: rotateY });
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-        setRotation({ x: 0, y: 0 });
-    };
 
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -51,7 +29,7 @@ const ProductCard = ({ product }) => {
         e.preventDefault();
         e.stopPropagation();
         const wishlist = JSON.parse(localStorage.getItem('vss_wishlist') || '[]');
-        
+
         if (isWishlisted) {
             const updated = wishlist.filter(itemId => itemId !== id);
             localStorage.setItem('vss_wishlist', JSON.stringify(updated));
@@ -61,7 +39,7 @@ const ProductCard = ({ product }) => {
             wishlist.push(id);
             localStorage.setItem('vss_wishlist', JSON.stringify(wishlist));
             setIsWishlisted(true);
-            showToast('Added to wishlist!', 'success');
+            showToast('Added to wishlist', 'success');
         }
     };
 
@@ -72,89 +50,83 @@ const ProductCard = ({ product }) => {
     };
 
     const isOnSale = originalPrice && originalPrice !== price;
-    
+
     return (
         <Link to={`/products/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div
                 ref={cardRef}
-                className={`glass-card gpu-layer card-animated hover-glow-red ${isHovered ? 'cool-outline' : ''}`}
                 onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={handleMouseLeave}
-                onMouseMove={handleMouseMove}
+                onMouseLeave={() => setIsHovered(false)}
                 style={{
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    border: '1px solid var(--color-border-glass)',
-                    borderRadius: 'var(--border-radius-md)',
+                    background: 'linear-gradient(145deg, #0C0C0C 0%, #080808 100%)',
+                    border: `1px solid ${isHovered ? 'rgba(201, 169, 98, 0.25)' : 'rgba(201, 169, 98, 0.08)'}`,
+                    borderRadius: '8px',
                     position: 'relative',
-                    perspective: '1000px',
-                    transformStyle: 'preserve-3d',
-                    transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                    transition: 'transform 0.1s ease-out, box-shadow 0.3s ease',
-                    boxShadow: isHovered 
-                        ? `${rotation.y * 2}px ${rotation.x * 2}px 40px rgba(255, 0, 0, 0.4)` 
-                        : '0 4px 20px rgba(0, 0, 0, 0.3)'
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                    boxShadow: isHovered
+                        ? '0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(201, 169, 98, 0.08)'
+                        : '0 4px 24px rgba(0, 0, 0, 0.4)'
                 }}
             >
-                {/* Sale Badge */}
+                {/* Featured Badge */}
                 {isOnSale && (
-                    <div className="pulse-red" style={{
+                    <div style={{
                         position: 'absolute',
-                        top: '12px',
-                        right: '12px',
+                        top: '16px',
+                        right: '16px',
                         zIndex: 10,
-                        background: 'var(--color-primary-red)',
-                        color: 'white',
-                        padding: '6px 12px',
-                        borderRadius: '6px',
+                        background: 'linear-gradient(135deg, #C9A962 0%, #8B7355 100%)',
+                        color: '#050505',
+                        padding: '6px 14px',
+                        borderRadius: '4px',
                         fontSize: '10px',
-                        fontWeight: '900',
-                        letterSpacing: '1px'
+                        fontWeight: '700',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase'
                     }}>
-                        SALE
+                        FEATURED
                     </div>
                 )}
 
-                {/* Image Wrapper */}
-                <div style={{ 
-                    position: 'relative', 
-                    overflow: 'hidden', 
-                    height: '240px', 
-                    background: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)', 
-                    borderBottom: '1px solid var(--color-border-glass)' 
+                {/* Image Container */}
+                <div style={{
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '260px',
+                    background: 'linear-gradient(180deg, #0a0a0a 0%, #050505 100%)',
+                    borderBottom: '1px solid rgba(201, 169, 98, 0.06)'
                 }}>
                     {/* Brand Badge */}
                     <div style={{
                         position: 'absolute',
-                        top: '12px',
-                        left: '12px',
+                        top: '16px',
+                        left: '16px',
                         zIndex: 5,
-                        background: 'rgba(0,0,0,0.8)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '6px 12px',
-                        borderRadius: '6px',
+                        background: 'rgba(5, 5, 5, 0.9)',
+                        backdropFilter: 'blur(12px)',
+                        padding: '8px 14px',
+                        borderRadius: '4px',
                         fontSize: '10px',
-                        fontWeight: '900',
-                        color: 'var(--color-gold)',
-                        border: '1px solid rgba(212, 175, 55, 0.3)',
-                        letterSpacing: '1px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px'
+                        fontWeight: '600',
+                        color: '#C9A962',
+                        border: '1px solid rgba(201, 169, 98, 0.2)',
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase'
                     }}>
-                        <Zap size={10} />
-                        {brand || 'PERFORMANCE'}
+                        {brand || 'VS SPEED'}
                     </div>
 
                     {/* Quick Action Buttons */}
-                    <div 
-                        className={`fade-in-right`}
+                    <div
                         style={{
                             position: 'absolute',
-                            top: '12px',
-                            right: isOnSale ? '70px' : '12px',
+                            top: '16px',
+                            right: isOnSale ? '90px' : '16px',
                             zIndex: 5,
                             display: 'flex',
                             flexDirection: 'column',
@@ -164,41 +136,40 @@ const ProductCard = ({ product }) => {
                             transition: 'all 0.3s ease'
                         }}
                     >
-                        <button 
+                        <button
                             onClick={handleWishlist}
-                            className="ripple"
                             style={{
-                                width: '36px',
-                                height: '36px',
-                                borderRadius: '8px',
-                                background: isWishlisted ? 'rgba(255,0,0,0.9)' : 'rgba(0,0,0,0.8)',
-                                border: `1px solid ${isWishlisted ? 'rgba(255,0,0,0.5)' : 'rgba(255,255,255,0.1)'}`,
-                                color: 'white',
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '6px',
+                                background: isWishlisted ? 'rgba(201, 169, 98, 0.9)' : 'rgba(5, 5, 5, 0.9)',
+                                border: `1px solid ${isWishlisted ? 'rgba(201, 169, 98, 0.5)' : 'rgba(201, 169, 98, 0.2)'}`,
+                                color: isWishlisted ? '#050505' : '#C9A962',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 transition: 'all 0.3s ease',
-                                transform: isWishlisted ? 'scale(1.1)' : 'scale(1)'
+                                backdropFilter: 'blur(12px)'
                             }}
                         >
-                            <Heart size={16} fill={isWishlisted ? 'white' : 'none'} />
+                            <Heart size={16} fill={isWishlisted ? '#050505' : 'none'} />
                         </button>
-                        <button 
+                        <button
                             onClick={handleQuickView}
-                            className="ripple"
                             style={{
-                                width: '36px',
-                                height: '36px',
-                                borderRadius: '8px',
-                                background: 'rgba(0,0,0,0.8)',
-                                border: '1px solid rgba(212,175,55,0.3)',
-                                color: 'var(--color-gold)',
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '6px',
+                                background: 'rgba(5, 5, 5, 0.9)',
+                                border: '1px solid rgba(201, 169, 98, 0.2)',
+                                color: '#C9A962',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                transition: 'all 0.3s ease'
+                                transition: 'all 0.3s ease',
+                                backdropFilter: 'blur(12px)'
                             }}
                         >
                             <Eye size={16} />
@@ -209,75 +180,98 @@ const ProductCard = ({ product }) => {
                     <img
                         src={image}
                         alt={title}
-                        style={{ 
-                            width: '100%', 
-                            height: '100%', 
+                        style={{
+                            width: '100%',
+                            height: '100%',
                             objectFit: 'contain',
-                            padding: '20px',
-                            transition: 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                            transform: isHovered ? 'scale(1.1)' : 'scale(1)'
+                            padding: '24px',
+                            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
                         }}
                         onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = 'https://placehold.co/400x400/1a1a1a/d4af37?text=' + encodeURIComponent(title.split(' ').slice(0, 2).join('+'));
+                            e.target.src = 'https://placehold.co/400x400/0a0a0a/C9A962?text=' + encodeURIComponent(title.split(' ').slice(0, 2).join('+'));
                         }}
                     />
 
-                    {/* Stock Indicator */}
+                    {/* Availability Indicator */}
                     <div style={{
                         position: 'absolute',
-                        bottom: '12px',
-                        left: '12px',
+                        bottom: '16px',
+                        left: '16px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        background: 'rgba(0,0,0,0.8)',
-                        padding: '5px 10px',
-                        borderRadius: '6px',
+                        gap: '8px',
+                        background: 'rgba(5, 5, 5, 0.9)',
+                        backdropFilter: 'blur(12px)',
+                        padding: '6px 12px',
+                        borderRadius: '4px',
                         fontSize: '10px',
-                        fontWeight: '700'
+                        fontWeight: '600',
+                        letterSpacing: '0.08em',
+                        border: '1px solid rgba(201, 169, 98, 0.1)'
                     }}>
-                        <div style={{ width: '6px', height: '6px', background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 8px #22c55e' }} />
-                        <span style={{ color: '#22c55e' }}>IN STOCK</span>
+                        <div style={{
+                            width: '6px',
+                            height: '6px',
+                            background: '#C9A962',
+                            borderRadius: '50%',
+                            boxShadow: '0 0 8px rgba(201, 169, 98, 0.6)'
+                        }} />
+                        <span style={{ color: '#C9A962', textTransform: 'uppercase' }}>Available</span>
                     </div>
                 </div>
 
-                {/* Content Wrapper */}
-                <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ 
-                        fontSize: '10px', 
-                        color: 'var(--color-gold)', 
-                        fontWeight: '800', 
-                        marginBottom: '8px', 
+                {/* Content */}
+                <div style={{
+                    padding: '20px',
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <span style={{
+                        fontSize: '10px',
+                        color: '#707070',
+                        fontWeight: '500',
+                        marginBottom: '8px',
                         textTransform: 'uppercase',
-                        letterSpacing: '1px'
+                        letterSpacing: '0.12em'
                     }}>
                         {category}
                     </span>
-                    <h3 style={{ 
-                        fontSize: '1rem', 
-                        marginBottom: '1rem', 
-                        flex: 1, 
-                        lineHeight: '1.4',
-                        fontWeight: '700',
-                        color: 'white'
+                    <h3 style={{
+                        fontSize: '0.95rem',
+                        marginBottom: '16px',
+                        flex: 1,
+                        lineHeight: '1.5',
+                        fontWeight: '500',
+                        color: '#FAFAFA',
+                        letterSpacing: '0.02em'
                     }}>
                         {title}
                     </h3>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: 'auto',
+                        paddingTop: '16px',
+                        borderTop: '1px solid rgba(201, 169, 98, 0.08)'
+                    }}>
                         <div>
-                            <span style={{ 
-                                fontSize: '1.4rem', 
-                                fontWeight: '900', 
-                                color: 'var(--color-primary-red)' 
+                            <span style={{
+                                fontSize: '1.25rem',
+                                fontWeight: '600',
+                                color: '#C9A962',
+                                letterSpacing: '0.02em'
                             }}>
                                 {price}
                             </span>
                             {isOnSale && originalPrice && (
-                                <span style={{ 
-                                    fontSize: '0.9rem', 
-                                    color: '#666', 
+                                <span style={{
+                                    fontSize: '0.85rem',
+                                    color: '#505050',
                                     textDecoration: 'line-through',
                                     marginLeft: '10px'
                                 }}>
@@ -288,23 +282,23 @@ const ProductCard = ({ product }) => {
 
                         <button
                             onClick={handleAddToCart}
-                            className="btn-animated ripple"
                             style={{
-                                background: isAdded ? '#22c55e' : 'var(--color-primary-red)',
-                                color: 'white',
-                                border: 'none',
+                                background: isAdded
+                                    ? 'linear-gradient(135deg, #C9A962 0%, #8B7355 100%)'
+                                    : 'transparent',
+                                color: isAdded ? '#050505' : '#C9A962',
+                                border: `1px solid ${isAdded ? 'transparent' : 'rgba(201, 169, 98, 0.4)'}`,
                                 padding: '12px',
-                                borderRadius: '10px',
+                                borderRadius: '6px',
                                 cursor: 'pointer',
-                                boxShadow: isAdded ? '0 4px 15px rgba(34, 197, 94, 0.4)' : '0 4px 15px rgba(255, 0, 0, 0.4)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 transition: 'all 0.3s ease',
-                                transform: isAdded ? 'scale(1.1)' : 'scale(1)'
+                                transform: isAdded ? 'scale(1.05)' : 'scale(1)'
                             }}
                         >
-                            {isAdded ? <CheckCircle size={20} /> : <ShoppingBag size={20} />}
+                            {isAdded ? <CheckCircle size={18} /> : <ShoppingBag size={18} />}
                         </button>
                     </div>
                 </div>
