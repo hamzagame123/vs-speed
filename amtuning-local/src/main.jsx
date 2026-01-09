@@ -9,7 +9,7 @@ import { CartProvider } from './contexts/CartContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/vs-speed">
       <VehicleProvider>
         <CartProvider>
           <App />

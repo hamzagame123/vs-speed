@@ -71,20 +71,20 @@ const FloatingAd = () => {
                         </div>
 
                         <div style={{ padding: '0 15px 15px' }}>
-                            <Link 
-                                to={`/products/${currentAd.id}`} 
+                            <Link
+                                to={`/products/${currentAd.id}`}
                                 onClick={closeAd}
-                                style={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    justifyContent: 'center', 
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                     gap: '8px',
-                                    width: '100%', 
-                                    background: 'var(--color-primary-red)', 
-                                    color: 'white', 
-                                    padding: '10px', 
-                                    borderRadius: '8px', 
-                                    fontSize: '0.8rem', 
+                                    width: '100%',
+                                    background: 'linear-gradient(135deg, #C9A962, #8B7355)',
+                                    color: '#050505',
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    fontSize: '0.8rem',
                                     fontWeight: '900',
                                     textDecoration: 'none'
                                 }}

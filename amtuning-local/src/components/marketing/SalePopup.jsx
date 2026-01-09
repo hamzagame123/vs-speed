@@ -98,7 +98,7 @@ const SalePopup = () => {
                                 background: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
                                 borderRadius: isMobile ? '16px' : '20px',
                                 overflow: 'hidden',
-                                boxShadow: '0 25px 80px rgba(212, 175, 55, 0.25), 0 0 50px rgba(210, 41, 49, 0.15)',
+                                boxShadow: '0 25px 80px rgba(201, 169, 98, 0.25), 0 0 50px rgba(201, 169, 98, 0.15)',
                                 border: '2px solid rgba(212, 175, 55, 0.3)',
                                 position: 'relative',
                                 maxHeight: '90vh',
@@ -242,9 +242,9 @@ const SalePopup = () => {
                                         <motion.span
                                             animate={{ scale: [1, 1.04, 1] }}
                                             transition={{ duration: 1.5, repeat: Infinity }}
-                                            style={{ 
-                                                fontSize: isMobile ? '28px' : '34px', 
-                                                color: '#D22931',
+                                            style={{
+                                                fontSize: isMobile ? '28px' : '34px',
+                                                color: '#C9A962',
                                                 fontWeight: '900'
                                             }}
                                         >
@@ -264,16 +264,16 @@ const SalePopup = () => {
                                         style={{
                                             width: '100%',
                                             padding: isMobile ? '14px 20px' : '16px 28px',
-                                            background: 'linear-gradient(135deg, #D22931, #8B0000)',
+                                            background: 'linear-gradient(135deg, #C9A962, #8B7355)',
                                             border: 'none',
                                             borderRadius: '10px',
-                                            color: '#fff',
+                                            color: '#050505',
                                             fontSize: isMobile ? '13px' : '15px',
                                             fontWeight: '800',
                                             cursor: 'pointer',
                                             letterSpacing: '0.5px',
                                             textTransform: 'uppercase',
-                                            boxShadow: '0 6px 20px rgba(210, 41, 49, 0.35)'
+                                            boxShadow: '0 6px 20px rgba(201, 169, 98, 0.35)'
                                         }}
                                     >
                                         Claim This Deal Now
